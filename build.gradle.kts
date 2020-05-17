@@ -6,20 +6,22 @@ plugins {
 	kotlin("jvm") version "1.3.72"
 	kotlin("plugin.spring") version "1.3.72"
 	kotlin("kapt") version "1.3.72"
+	id("maven")
+	id("idea")
 }
+
 
 group = "urlchecker"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
-	mavenCentral()
-
+	maven("https://dl.bintray.com/honzatrtik/maven/")
 	maven("https://dl.bintray.com/arrow-kt/arrow-kt/")
-	maven("https://maven.pkg.github.com/honzatrtik/url-checker-scala")
+	mavenCentral()
 }
 
-val arrowVersion = "0.10.4"
+val arrowVersion = "0.10.5"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -29,9 +31,13 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
+	implementation("url-checker:url-checker_2.13:0.2")
 
 	implementation("io.arrow-kt:arrow-core:$arrowVersion")
+	implementation("io.arrow-kt:arrow-optics:$arrowVersion")
 	implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
+	implementation("io.arrow-kt:arrow-fx:$arrowVersion")
+	implementation("io.arrow-kt:arrow-fx-reactor:$arrowVersion")
 
 	kapt("io.arrow-kt:arrow-meta:$arrowVersion")
 
@@ -41,6 +47,29 @@ dependencies {
 	testImplementation("io.projectreactor:reactor-test")
 
 
+}
+
+idea {
+	module {
+		sourceDirs.addAll(files(
+			"build/generated/source/kapt/main",
+			"build/generated/source/kapt/debug",
+			"build/generated/source/kapt/release",
+			"build/generated/source/kaptKotlin/main",
+			"build/generated/source/kaptKotlin/debug",
+			"build/generated/source/kaptKotlin/release",
+			"build/tmp/kapt/main/kotlinGenerated")
+		)
+		generatedSourceDirs.addAll(files(
+			"build/generated/source/kapt/main",
+			"build/generated/source/kapt/debug",
+			"build/generated/source/kapt/release",
+			"build/generated/source/kaptKotlin/main",
+			"build/generated/source/kaptKotlin/debug",
+			"build/generated/source/kaptKotlin/release",
+			"build/tmp/kapt/main/kotlinGenerated")
+		)
+	}
 }
 
 tasks.withType<Test> {
